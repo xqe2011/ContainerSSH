@@ -81,9 +81,6 @@ nfpms:
         dst: /usr/share/doc/containerssh/LICENSE
       - src: NOTICE.md
         dst: /usr/share/doc/containerssh/NOTICE.md
-signs:
-  - id: sign-checksums
-    artifacts: checksum
 source:
   enabled: true
   name_template: '{{ .ProjectName }}-{{ .Version }}-source'
