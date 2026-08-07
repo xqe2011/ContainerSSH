@@ -159,7 +159,7 @@ func (s *sshChannelHandler) streamStdin() {
 			s.logger.Debug(message.Wrap(err, message.ESSHProxyStdinError, "Error copying stdin"))
 		}
 	}
-	s.logger.Debug(message.NewMessage(message.MSSHProxySessionClose, "Stdin complete, closing backing session channel..."))
+	s.logger.Debug(message.NewMessage(message.MSSHProxySessionClose, "Stdin complete, closing backing session channel for writing..."))
 	if err := s.backingChannel.CloseWrite(); err != nil && !errors.Is(err, io.EOF) {
 		s.logger.Debug(
 			message.NewMessage(
@@ -168,16 +168,8 @@ func (s *sshChannelHandler) streamStdin() {
 			),
 		)
 	}
-	if err := s.backingChannel.Close(); err != nil && !errors.Is(err, io.EOF) {
-		s.logger.Debug(
-			message.NewMessage(
-				message.ESSHProxySessionCloseFailed,
-				"Failed to close the backend SSH channel.",
-			),
-		)
-	} else {
-		s.logger.Debug(message.NewMessage(message.MSSHProxySessionClosed, "Closed backing session channel."))
-	}
+	// The backing channel must not be closed here: the backend program may still
+	// be writing to stdout/stderr. It is closed in OnClose() once the session ends.
 }
 
 func (s *sshChannelHandler) OnUnsupportedChannelRequest(_ uint64, _ string, _ []byte) {}
