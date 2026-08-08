@@ -5,3 +5,6 @@ docker-compose.yaml
 
 build/
 cover.out
+
+.git/
+run/
