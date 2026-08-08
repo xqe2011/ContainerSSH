@@ -94,7 +94,7 @@ sboms:
 dist: build
 release:
   github:
-    owner: containerssh
+    owner: xqe2011
     name: containerssh
   prerelease: auto
   extra_files:
